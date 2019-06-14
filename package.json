@@ -1,0 +1,32 @@
+{
+  "name": "lim009-fe-md-links",
+  "version": "1.0.0",
+  "description": "## Preámbulo",
+  "main": "./lib/read",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yenifergalarza/LIM009-fe-md-links.git"
+  },
+  "keywords": [
+    "promise",
+    "md",
+    "links"
+  ],
+  "author": "yeniferGalarza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yenifergalarza/LIM009-fe-md-links/issues"
+  },
+  "homepage": "https://github.com/yenifergalarza/LIM009-fe-md-links#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "markdown-link-extractor": "^1.2.1"
+  }
+}
