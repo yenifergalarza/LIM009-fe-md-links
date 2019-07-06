@@ -121,7 +121,7 @@ export const readMd = (absolutePath) => {
         }
         else{
           console.log("es un directorio");
-          resolve(  readDir(absolutePath))        };
+          resolve(  readDir(absolutePath))   };
       }
      
       
@@ -135,25 +135,11 @@ export const readMd = (absolutePath) => {
 
 
 
-export const onlyBrokesLinks = (arrayCount) => {
-  let brokenLinks = 0;
-  let url;
- return Promise.all(
-    arrayCount.map(function (link) {
-      url = link.href;
-      return axios.get(url).then(res => {
-        //do nothing
-      }).catch(err => {
-        //console.log(err.response.status);
-        if (err.response.status) {
-          /*  */
-          // brokenLinks.push(err.response.status);
-          brokenLinks += 1;
-        };
-        return brokenLinks;
-      })
-    })
-  ).then(() => {return brokenLinks});
+export const onlyBrokesLinks = (returnOfFuncion) => {
+ let result = returnOfFuncion.filter(property => property.status>= 400);
+ result = result.length;
+return result;
+
   
 };
 export const onlyStats = (arrayCount) => {
@@ -197,25 +183,29 @@ export const onlyStatusLinks = (arrayCount) => {
         if (err.response.status) {
           link.statustext="Fail";
          link.status=err.response.status;
+         return link;
         };
-        console.log(`${ link.file} ${ link.href} ${  link.statustext} ${  link.status}  ${  link.text}`);
-        return arrayCount;
+       // console.log(`${ link.file} ${ link.href} ${  link.statustext} ${  link.status}  ${  link.text}`);
+       // return arrayCount;
       })
     })
-  )
+  ).then(arrayCount);
 };
 
-export const validateAndStats =(arrayCount)=>{
- onlyBrokesLinks(arrayCount);
- onlyStats(arrayCount);
-}
+// export const validateAndStats =(arrayCount,returnOfFuncion)=>{
+// returnOfFuncion.then(data => {onlyBrokesLinks(data)});
+//  onlyStats(arrayCount);
+// }
 export const mdLinks = (absolutePath, options={}) => new Promise((resolve, reject) => {
   if (fs.existsSync(absolutePath)) {
   //  const arrayLink = readMd(absolutePath);
    return readMd(absolutePath).then(arrayLink =>{
 
     if (options.validate && options.stats) {
-      resolve (validateAndStats(arrayLink));
+      resolve (onlyStats(arrayLink));
+     if(options.validate && options.stats){
+      resolve (onlyStatusLinks(arrayLink).then(data => {console.log(onlyBrokesLinks(data))}));
+     };
     } else if (options.validate && !options.stats) {
       resolve (onlyStatusLinks(arrayLink));
     } else if (!options.validate && options.stats) {
