@@ -68,13 +68,12 @@ export const getArrayOfObjectsLinks = (markdownfile,path) => {
 
 
 export const readDir = (absolutePath) => {
-	fs.readdir(absolutePath, (err, data) => {
+return 	fs.readdir(absolutePath, (err, data) => {/* 
    
 console.log(data);
 
 
 let newRoutes  = data.map(function(dataEach) {
- 
   const slash = '/';
   return absolutePath.concat(slash,dataEach);
 });
@@ -87,8 +86,23 @@ absolutePath = element;
 
 
 
-	})
-}
+  }) */
+  let files = data; 
+  let absoluteRoute ;
+//let pathOfDir = path.resolve(absolutePath);
+for(let x in files){
+  absoluteRoute = path.join(absolutePath,files[x]);   
+    console.log(absoluteRoute);
+   
+    if( fs.statSync(absoluteRoute).isDirectory()===true){
+     return readDir(absoluteRoute);
+    }else if(path.extname(`${ absoluteRoute}`)== ".md"){
+      // return absoluteRoute;
+      //return absolutePath
+      return readMd(absoluteRoute);
+    }
+} return absoluteRoute;
+})}
 
 
 
@@ -110,7 +124,7 @@ export const readMd = (absolutePath) => {
              console.log("es md");
             
             const result = getArrayOfObjectsLinks(fs.readFileSync(absolutePath).toString(),absolutePath);
-            //console.log(result);
+           console.log(result);
             resolve(result);
           //  return r
           }
@@ -121,7 +135,8 @@ export const readMd = (absolutePath) => {
         }
         else{
           console.log("es un directorio");
-          resolve(  readDir(absolutePath))   };
+          path.resolve(absolutePath);
+          resolve( readDir(absolutePath))   };
       }
      
       
