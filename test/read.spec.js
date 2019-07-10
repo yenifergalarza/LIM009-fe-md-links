@@ -1,5 +1,5 @@
 
-import { getArrayOfObjectsLinks ,onlyBrokesLinks,onlyStats,onlyStatusLinks,mdLinks} from "../src/read";
+import { getArrayOfObjectsLinks ,onlyBrokesLinks,onlyStats,onlyStatusLinks,mdLinks,readDir} from "../src/read";
 //ok
 test ("deberia retornar un array de objects",(done)=>{
 expect(getArrayOfObjectsLinks( `Preámbulo
@@ -95,3 +95,8 @@ test('si pasas el mdlink sin validate con stats retorna un array que contiene li
       expect(data).toEqual([45, 43]);
       done();
 })});
+
+test("funciona el lector de doc en algo",(done)=>{
+  expect(readDir('/home/yennialex/Documents/Web Development js/LIM009-fe-md-links/src')).toEqual("algo");
+  done();
+})

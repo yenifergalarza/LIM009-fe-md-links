@@ -39,59 +39,32 @@ export const getArrayOfObjectsLinks = (markdownfile,path) => {
     };
     arrayObject.push(obj);
 
-//console.log("llegue a get aaray objct");
-
-// console.log(`${obj.file} ${obj.href} ${obj.text }`);
 
   });
 
   return arrayObject;
- // console.log(arrayObject)
+
 
 };
-
-
-
-
-
 
 
 
  //onlyBrokesLinks(getArrayOfObjectsLinks(markdown));
  //onlyStats(getArrayOfObjectsLinks(markdown));
 
-
-
-
 // onlystatusLinks(getArrayOfObjectsLinks(markdown));
 
 
 
 export const readDir = (absolutePath) => {
-return 	fs.readdir(absolutePath, (err, data) => {/* 
-   
-console.log(data);
-
-
-let newRoutes  = data.map(function(dataEach) {
-  const slash = '/';
-  return absolutePath.concat(slash,dataEach);
-});
-
-newRoutes.forEach(function(element) {
-   
-absolutePath = element;
- readMd(absolutePath);
-});
-
-
-
-  }) */
+  const pathArray =[];
+    let absoluteRoute ;
+	fs.readdir(absolutePath, (err, data) => {
   let files = data; 
-  let absoluteRoute ;
+
 //let pathOfDir = path.resolve(absolutePath);
-for(let x in files){
-  absoluteRoute = path.join(absolutePath,files[x]);   
+for(let x of files){
+  absoluteRoute = path.join(absolutePath,x);   
     console.log(absoluteRoute);
    
     if( fs.statSync(absoluteRoute).isDirectory()===true){
@@ -99,10 +72,14 @@ for(let x in files){
     }else if(path.extname(`${ absoluteRoute}`)== ".md"){
       // return absoluteRoute;
       //return absolutePath
-      return readMd(absoluteRoute);
+     return pathArray.push(absoluteRoute);
     }
-} return absoluteRoute;
-})}
+}
+});
+for (const link of pathArray) {
+ return readMd(link)
+}
+}
 
 
 
@@ -114,17 +91,13 @@ export const readMd = (absolutePath) => {
         
       }
        else{ 
-        //  console.log("else de else 1");
-        // return stats.isFile() ?  
-        // path.extname(`${absolutePath}`)== ".md" ?  getArrayOfObjectsLinks(fs.readFileSync(absolutePath).toString()):console.log("no es un md")
-        // : stats.isDirectory()?	readDir(absolutePath):console.log("no existe ese elemento,lo siento :(");
-        if(stats.isFile()){
+             if(stats.isFile()){
           console.log("es un archivo");
           if(path.extname(`${absolutePath}`)== ".md" ){
              console.log("es md");
             
             const result = getArrayOfObjectsLinks(fs.readFileSync(absolutePath).toString(),absolutePath);
-           console.log(result);
+           //console.log(result);
             resolve(result);
           //  return r
           }
@@ -219,14 +192,14 @@ export const mdLinks = (absolutePath, options={}) => new Promise((resolve, rejec
     if (options.validate && options.stats) {
       resolve (onlyStats(arrayLink));
      if(options.validate && options.stats){
-      resolve (onlyStatusLinks(arrayLink).then(data => {console.log(onlyBrokesLinks(data))}));
+      resolve (onlyStatusLinks(arrayLink).then(data => {console.log(`rotos: ${onlyBrokesLinks(data)}`)}));
      };
     } else if (options.validate && !options.stats) {
       resolve (onlyStatusLinks(arrayLink));
     } else if (!options.validate && options.stats) {
       resolve (onlyStats(arrayLink));
     }else{
-      resolve(arrayLink)
+     ( resolve(arrayLink))
     }
    })  
     }
