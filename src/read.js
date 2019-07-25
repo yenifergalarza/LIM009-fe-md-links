@@ -21,7 +21,7 @@ export const getArrayOfObjectsLinks = (markdownfile, path) => {
     const textRegex = /\[(.+)\]/gi;
     //with negative lookahead and negative lookbehind
     const withoutBrackets = /((?!\[)(.+)(?<!\]))/gi;
-
+ 
     const urlRegex = /((ftp|http|https):\/\/(.+)(?<!\)))/gi;
 
     let text = (link.match(textRegex));
@@ -37,9 +37,10 @@ export const getArrayOfObjectsLinks = (markdownfile, path) => {
 
 
   });
-
-  return arrayObject;
-
+  
+console.log("termine un proceso")
+  return  arrayObject;
+//Array.prototype.concat(...arrayObject)
 
 };
 
@@ -59,7 +60,6 @@ export const mdFiles = (absolutePath) => {
 
 
   try {
-    console.log(absolutePath, "linea97");
     if (fs.lstatSync(absolutePath).isFile()) 
     {
        if (path.extname(absolutePath) === ".md") {
@@ -99,11 +99,12 @@ export const mdFiles = (absolutePath) => {
 
 
 const getLinks = (absolutePath) => {
+
   return new Promise((resolve, reject) => {
-    resolve(
-      mdFiles(absolutePath).map(pathMd => getArrayOfObjectsLinks(fs.readFileSync(pathMd).toString(), pathMd ))
+    const resultado = mdFiles(absolutePath).map(pathMd => getArrayOfObjectsLinks(fs.readFileSync(pathMd).toString(), pathMd ) )
+    resolve(resultado.reduce((acum, current) => acum.concat(current)), [] )
       //
-    )
+ 
   });
 
   //
