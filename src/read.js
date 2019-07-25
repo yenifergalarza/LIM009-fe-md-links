@@ -9,9 +9,9 @@ import axios from 'axios'
 
 
 
-  const arrayObject = [];
-export const getArrayOfObjectsLinks = (markdownfile, path) => {
 
+export const getArrayOfObjectsLinks = (markdownfile, path) => {
+const arrayObject = [];
   const markdownRegex = /\[(.+)\](\((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
 
 
@@ -21,7 +21,7 @@ export const getArrayOfObjectsLinks = (markdownfile, path) => {
     const textRegex = /\[(.+)\]/gi;
     //with negative lookahead and negative lookbehind
     const withoutBrackets = /((?!\[)(.+)(?<!\]))/gi;
- 
+
     const urlRegex = /((ftp|http|https):\/\/(.+)(?<!\)))/gi;
 
     let text = (link.match(textRegex));
@@ -37,10 +37,8 @@ export const getArrayOfObjectsLinks = (markdownfile, path) => {
 
 
   });
-  
-console.log("termine un proceso")
-  return  arrayObject;
-//Array.prototype.concat(...arrayObject)
+  return arrayObject;
+  // Array.prototype.concat(...arrayObject)
 
 };
 
@@ -55,33 +53,23 @@ console.log("termine un proceso")
 
 
 // const result = getArrayOfObjectsLinks(fs.readFileSync(absolutePath).toString(), absolutePath);
-  let arrayOfFiles = [];
-export const mdFiles = (absolutePath) => {
 
+export const mdFiles = (absolutePath) => {
+  let arrayOfFiles = [];
 
   try {
-    if (fs.lstatSync(absolutePath).isFile()) 
-    {
-       if (path.extname(absolutePath) === ".md") {
+    if (fs.lstatSync(absolutePath).isFile()) {
+      if (path.extname(absolutePath) === ".md") {
         arrayOfFiles.push(absolutePath);
-     
-      }  return arrayOfFiles;
-    //  else { return arrayOfFiles }
-     
-    } 
-    else {
+      }
+      return arrayOfFiles;
+    } else {
       let next = "";
       const files = fs.readdirSync(absolutePath);
       for (let x in files) {
         next = path.join(absolutePath, files[x]);
 
-        if (fs.statSync(next).isDirectory()) {
-          mdFiles(next);
-        } else { 
-        // arrayOfFiles.push(absolutePath);
-          mdFiles(next);
-     
-        }
+        arrayOfFiles = arrayOfFiles.concat(mdFiles(next));
       }
 
       return arrayOfFiles;
@@ -98,13 +86,14 @@ export const mdFiles = (absolutePath) => {
 
 
 
-const getLinks = (absolutePath) => {
+export const getLinks = (absolutePath) => {
 
   return new Promise((resolve, reject) => {
-    const resultado = mdFiles(absolutePath).map(pathMd => getArrayOfObjectsLinks(fs.readFileSync(pathMd).toString(), pathMd ) )
-    resolve(resultado.reduce((acum, current) => acum.concat(current)), [] )
-      //
- 
+    let resultado = mdFiles(absolutePath).map(pathMd => getArrayOfObjectsLinks(fs.readFileSync(pathMd).toString(), pathMd));
+  resultado = resultado.reduce((previous, current) => {return previous.concat(current)});
+    resolve(resultado); 
+    
+
   });
 
   //
@@ -151,7 +140,7 @@ export const onlyStatusLinks = (arrayCount) => {
   return Promise.all(
     arrayCount.map(function (link) {
       url = link.href;
-      return axios.post(url).then(res => {
+      return axios.get(url).then(res => {
 
         link.statustext = "Ok";
         link.status = res.status;
