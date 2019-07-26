@@ -35,4 +35,4 @@ options1n2.forEach((option) => {
     }
   });
 
-  mdLinks(absolutePath,options).then(links => console.log(links));
+  mdLinks(absolutePath,options).then(links => console.log(links)).catch(err => console.log(err));

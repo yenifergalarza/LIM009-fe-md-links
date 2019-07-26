@@ -11,7 +11,7 @@ import axios from 'axios'
 
 
 export const getArrayOfObjectsLinks = (markdownfile, path) => {
-const arrayObject = [];
+  const arrayObject = [];
   const markdownRegex = /\[(.+)\](\((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
 
 
@@ -38,21 +38,8 @@ const arrayObject = [];
 
   });
   return arrayObject;
-  // Array.prototype.concat(...arrayObject)
-
 };
 
-
-
-//onlyBrokesLinks(getArrayOfObjectsLinks(markdown));
-//onlyStats(getArrayOfObjectsLinks(markdown));
-
-// onlystatusLinks(getArrayOfObjectsLinks(markdown));
-
-
-
-
-// const result = getArrayOfObjectsLinks(fs.readFileSync(absolutePath).toString(), absolutePath);
 
 export const mdFiles = (absolutePath) => {
   let arrayOfFiles = [];
@@ -63,19 +50,25 @@ export const mdFiles = (absolutePath) => {
         arrayOfFiles.push(absolutePath);
       }
       return arrayOfFiles;
-    } else {
+    }  else if(fs.lstatSync(absolutePath).isDirectory())
+    {
       let next = "";
       const files = fs.readdirSync(absolutePath);
       for (let x in files) {
         next = path.join(absolutePath, files[x]);
-
         arrayOfFiles = arrayOfFiles.concat(mdFiles(next));
       }
 
+    
       return arrayOfFiles;
-      // resolve(arrayOfFiles.concat(absolutePath));
+
+    }
+
+    else{
+      return undefined
     }
   } catch (err) {
+    
     console.log(err);
   }
 
@@ -90,13 +83,13 @@ export const getLinks = (absolutePath) => {
 
   return new Promise((resolve, reject) => {
     let resultado = mdFiles(absolutePath).map(pathMd => getArrayOfObjectsLinks(fs.readFileSync(pathMd).toString(), pathMd));
-  resultado = resultado.reduce((previous, current) => {return previous.concat(current)});
-    resolve(resultado); 
-    
+    resultado = resultado.reduce((previous, current) => {
+      return previous.concat(current)
+    });
+    resolve(resultado);
+
 
   });
-
-  //
 };
 
 
@@ -159,10 +152,7 @@ export const onlyStatusLinks = (arrayCount) => {
   ).then(arrayCount);
 };
 
-// export const validateAndStats =(arrayCount,returnOfFuncion)=>{
-// returnOfFuncion.then(data => {onlyBrokesLinks(data)});
-//  onlyStats(arrayCount);
-// }
+
 export const mdLinks = (absolutePath, options = {}) => new Promise((resolve, reject) => {
   if (fs.existsSync(absolutePath)) {
     //  const arrayLink = readMd(absolutePath);
@@ -184,13 +174,8 @@ export const mdLinks = (absolutePath, options = {}) => new Promise((resolve, rej
       }
     })
   } else {
-    reject(
-      console.log(`La ruta no existe o es incorrecta`));
-
+    const pathUndefined = `La ruta no existe o es incorrecta`;
+    reject(pathUndefined);
+    return pathUndefined;
   }
 });
-//mdLinks('/home/yennialex/Documents/Web Development js/LIM009-fe-md-links/README.md',{validate:true}).then(r => console.log(r));
-// readMd('/home/yennialex/Documents/Web Development js/LIM009-fe-md-links/README.md').then(r => console.log(r))
-
-// let e = getArrayOfObjectsLinks(fs.readFileSync('/home/yennialex/Documents/Web Development js/LIM009-fe-md-links/README.md').toString())
-// console.log(e);

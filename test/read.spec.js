@@ -143,4 +143,17 @@ test('si a la funcion mdFiles le paso la ruta de una carpeta me devuelve un arra
 test('si a la funcion mdFiles le paso una ruta mala me devuelve un array que contiene undefined ', () => {
   expect(mdFiles('/README.md')).toEqual();
 
-})
+});
+
+test('si pasas una ruta mala mdlink sin validate con stats retorna un array que contiene links repetidos y unicos',  (done) => {
+  mdLinks('',{}).then((data) => {
+      expect(data).toEqual("La ruta no existe o es incorrecta");
+      done();
+})});
+
+
+test('si pasas una ruta buena mdlink con validate con stats retorna un array que contiene links repetidos y unicos',  (done) => {
+  mdLinks('/home/yennialex/Documents/Web Development js/LIM009-fe-md-links/src/src2/README.md',{validate:true,stats :true}).then((data) => {
+      expect(data).toEqual([2, 2]);
+      done();
+})});

@@ -5,10 +5,10 @@
   "main": "./lib/read",
   "directories": {
     "lib": "lib",
-    "test": "jest --coverage --detectOpenHandles"
+    "test": "jest   "
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "babel src -d lib"
   },
   "repository": {
